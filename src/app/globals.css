@@ -76,8 +76,75 @@
   }
 
 }
-
 :root {
+  --radius: 0.625rem;
+  --background: #0d1117;
+  --foreground: #e6e6e6;
+  --card: #161b22;
+  --card-foreground: #e6e6e6;
+  --popover: #161b22;
+  --popover-foreground: #e6e6e6;
+  --primary: #238636;
+  --primary-foreground: #ffffff;
+  --secondary: #30363d;
+  --secondary-foreground: #e6e6e6;
+  --muted: #30363d;
+  --muted-foreground: #8b949e;
+  --accent: #30363d;
+  --accent-foreground: #c9d1d9;
+  --destructive: #f85149;
+  --border: #30363d;
+  --input: #161b22;
+  --ring: #30363d;
+  --chart-1: #238636;
+  --chart-2: #58a6ff;
+  --chart-3: #a475f9;
+  --chart-4: #f7b14d;
+  --chart-5: #e34c26;
+  --sidebar: #161b22;
+  --sidebar-foreground: #e6e6e6;
+  --sidebar-primary: #238636;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #30363d;
+  --sidebar-accent-foreground: #c9d1d9;
+  --sidebar-border: #30363d;
+  --sidebar-ring: #30363d;
+}
+
+.dark {
+  --background: #0d1117;
+  --foreground: #e6e6e6;
+  --card: #161b22;
+  --card-foreground: #e6e6e6;
+  --popover: #161b22;
+  --popover-foreground: #e6e6e6;
+  --primary: #238636;
+  --primary-foreground: #ffffff;
+  --secondary: #30363d;
+  --secondary-foreground: #e6e6e6;
+  --muted: #30363d;
+  --muted-foreground: #8b949e;
+  --accent: #30363d;
+  --accent-foreground: #c9d1d9;
+  --destructive: #f85149;
+  --border: #30363d;
+  --input: #161b22;
+  --ring: #30363d;
+  --chart-1: #238636;
+  --chart-2: #58a6ff;
+  --chart-3: #a475f9;
+  --chart-4: #f7b14d;
+  --chart-5: #e34c26;
+  --sidebar: #161b22;
+  --sidebar-foreground: #e6e6e6;
+  --sidebar-primary: #238636;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #30363d;
+  --sidebar-accent-foreground: #c9d1d9;
+  --sidebar-border: #30363d;
+  --sidebar-ring: #30363d;
+}
+/* :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -144,7 +211,7 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-}
+} */
 
 @layer base {
   * {
