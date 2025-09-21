@@ -2,7 +2,6 @@
 import Link from "next/link"
 import courseData from "@/data/music_courses.json";
 import { BackgroundGradient } from "./ui/background-gradient"
-import { Button } from "./ui/moving-border";
 interface Course{
     id: number,
     title: string,
@@ -11,7 +10,6 @@ interface Course{
     price: number,
     instructor: string,
     isFeatured: boolean,
-        
 }
 
 function FeaturedCourses() {
@@ -54,5 +52,4 @@ function FeaturedCourses() {
     </div>
   )
 }
-
 export default FeaturedCourses
