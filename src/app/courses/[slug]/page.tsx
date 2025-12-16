@@ -1,8 +1,6 @@
 import courseData from "@/data/music_courses.json";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-
-// Helper to find course
 async function getCourse(slug: string) {
   return courseData.courses.find((c) => c.slug === slug);
 }
@@ -66,8 +64,7 @@ export default async function CourseDetail({
             </div>
           </div>
         </div>
-        
-        {/* Course Content Section (Mock) */}
+      
         <div className="mt-20">
           <h2 className="text-2xl font-bold mb-6">Course Curriculum</h2>
           <div className="space-y-4">

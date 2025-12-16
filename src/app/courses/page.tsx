@@ -13,9 +13,8 @@ export default function CoursesPage() {
     course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
   return (
-    <div className="min-h-screen bg-black py-12 pt-36">
+    <div className="min-h-screen bg-black py-12 **pt-52**">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
