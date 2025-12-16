@@ -4,61 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllCourses } from "@/lib/data/course-data";
 import { Course } from "@/lib/types";
-import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { notFound } from "next/navigation";
+// Import the new Client Component
+import FilterAndSort from "@/components/courses/FilterAndSort";
 
-// Define Sort options
-const SORT_OPTIONS = [
-    { label: "Title (A-Z)", value: "title" },
-    { label: "Price (Low to High)", value: "price" },
-];
 
 interface CourseListingProps {
     searchParams: {
         search?: string;
         sort?: 'title' | 'price' | 'instructor';
     };
-}
-
-// Client Component for the Search/Filter UI (Input and Select)
-// Needs 'use client' because it handles form submission and local state for input
-function FilterAndSortControls({ initialSearch = "", initialSort = "title" }: { initialSearch?: string, initialSort?: string }) {
-    return (
-        <div className="mt-8 max-w-4xl mx-auto flex flex-col md:flex-row gap-4">
-            {/* Search Input */}
-            <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500" />
-                {/* Use 'defaultValue' for Server Component state synchronization */}
-                <input
-                    type="search"
-                    name="search"
-                    placeholder="Search by title or instructor..."
-                    className="w-full px-4 py-3 pl-10 rounded-lg border border-neutral-800 bg-neutral-950 text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-150"
-                    defaultValue={initialSearch}
-                />
-            </div>
-            
-            {/* Sort Dropdown */}
-            <div className="relative">
-                <SlidersHorizontal className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500" />
-                <select
-                    name="sort"
-                    defaultValue={initialSort}
-                    className="w-full md:w-48 appearance-none px-4 py-3 pl-10 rounded-lg border border-neutral-800 bg-neutral-950 text-white focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition duration-150"
-                    onChange={(e) => {
-                        const params = new URLSearchParams(window.location.search);
-                        params.set('sort', e.target.value);
-                        window.history.pushState(null, '', `?${params.toString()}`);
-                        window.location.reload(); // Simple way to trigger server component reload
-                    }}
-                >
-                    {SORT_OPTIONS.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                </select>
-            </div>
-        </div>
-    );
 }
 
 // Server Component to Fetch and Display Courses
@@ -157,9 +113,9 @@ export default function CoursesPage({ searchParams }: CourseListingProps) {
             Browse our comprehensive collection of music courses, or use the AI Pathfinder for a custom journey.
           </p>
           
-          {/* Filter and Sort Form - Must use a client component for interactivity */}
+          {/* Filter and Sort Form - Now uses the imported client component */}
           <form>
-            <FilterAndSortControls initialSearch={search} initialSort={sort} />
+            <FilterAndSort initialSearch={search} initialSort={sort} />
           </form>
         </div>
 
