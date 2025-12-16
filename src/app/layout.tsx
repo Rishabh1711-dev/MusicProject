@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import Providers from "./providers";
+import "./globals.css";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -12,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Melody Mastery",
-  description: "Where Music comes Alive",
+  title: "MelodyMind - AI Adaptive Music Learning", // Updated title
+  description: "The AI-Powered Personalized Music Learning Platform.", // Updated description
 };
 
 export default function RootLayout({
@@ -24,15 +27,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white dark`} // Force dark mode via 'dark' class
       >
-        {/* Navbar */}
-        <Navbar />
+        <Providers> {/* Wrap the whole app in the context provider */}
+          {/* Navbar */}
+          <Navbar />
 
-        {/* Page Content */}
-        <main className="pt-32 min-h-screen w-full">
-          {children}
-        </main>
+          {/* Page Content: Increased padding-top for fixed navbar and better visual space */}
+          <main className="pt-28 min-h-screen w-full"> 
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );
