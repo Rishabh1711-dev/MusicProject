@@ -1,13 +1,12 @@
 import React, { Suspense } from "react";
-import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
-import Link from "next/link";
-import Image from "next/image";
+// Remove CardBody, CardContainer, CardItem, Link, Image imports
 import { getAllCourses } from "@/lib/data/course-data";
 import { Course } from "@/lib/types";
 import { Loader2 } from "lucide-react";
 import { notFound } from "next/navigation";
-// Import the new Client Component
 import FilterAndSort from "@/components/courses/FilterAndSort";
+// New: Import the new CourseCard component
+import CourseCard from "@/components/courses/CourseCard";
 
 
 interface CourseListingProps {
@@ -32,50 +31,9 @@ async function CourseContent({ search, sort }: { search?: string, sort?: 'title'
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-10">
+          {/* Use the new CourseCard Client Component */}
           {courses.map((course: Course) => (
-            <CardContainer key={course.id} className="inter-var">
-              <CardBody className="bg-neutral-900 relative group/card dark:hover:shadow-2xl dark:hover:shadow-teal-500/[0.1] dark:bg-black dark:border-white/[0.2] border-neutral-800/50 w-auto h-full rounded-xl p-6 border transition-all duration-300">
-                <CardItem
-                  translateZ="50"
-                  className="text-xl font-bold text-neutral-200 dark:text-white line-clamp-2"
-                >
-                  {course.title}
-                </CardItem>
-                <CardItem
-                  as="p"
-                  translateZ="60"
-                  className="text-neutral-500 text-sm mt-2 line-clamp-3"
-                >
-                  {course.description}
-                </CardItem>
-                <CardItem translateZ="100" className="w-full mt-4">
-                  <Image
-                    src={course.image}
-                    height="1000"
-                    width="1000"
-                    className="h-60 w-full object-cover object-center rounded-xl group-hover/card:shadow-xl transition-shadow duration-500"
-                    alt={course.title}
-                  />
-                </CardItem>
-                <div className="flex justify-between items-center mt-6">
-                  <CardItem
-                    translateZ={20}
-                    as={Link}
-                    href={`/courses/${course.slug}`}
-                    className="px-4 py-2 rounded-xl text-xs font-normal dark:text-teal-400 hover:underline"
-                  >
-                    Details →
-                  </CardItem>
-                  <CardItem
-                    translateZ={20}
-                    as="button"
-                    className="px-4 py-2 rounded-xl bg-teal-600 dark:bg-teal-600 dark:text-white text-white text-xs font-bold hover:bg-teal-700 transition duration-200"
-                  >
-                    Buy ${course.price}
-                  </CardItem>
-                </div>
-              </CardBody>
-            </CardContainer>
+            <CourseCard key={course.id} course={course} />
           ))}
         </div>
     );
@@ -113,7 +71,7 @@ export default function CoursesPage({ searchParams }: CourseListingProps) {
             Browse our comprehensive collection of music courses, or use the AI Pathfinder for a custom journey.
           </p>
           
-          {/* Filter and Sort Form - Now uses the imported client component */}
+          {/* Filter and Sort Form */}
           <form>
             <FilterAndSort initialSearch={search} initialSort={sort} />
           </form>

@@ -1,3 +1,6 @@
+/* FIX: In Tailwind CSS v4, the old @tailwind directives 
+   must be replaced with a single @import statement.
+*/
 @import "tailwindcss";
 
 @import "tw-animate-css";
