@@ -1,3 +1,4 @@
+// src/components/lms/ProgressCircle.tsx
 'use client';
 
 import React from 'react';
@@ -18,6 +19,7 @@ export const ProgressCircle: React.FC<ProgressCircleProps> = ({
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
+  // Calculate the offset for the arc based on the progress percentage
   const offset = circumference - (progress / 100) * circumference;
 
   const color = progress >= 75 ? 'text-teal-400' : progress >= 50 ? 'text-yellow-400' : 'text-blue-400';
@@ -46,7 +48,8 @@ export const ProgressCircle: React.FC<ProgressCircleProps> = ({
           stroke="currentColor"
           fill="transparent"
           strokeWidth={strokeWidth}
-          strokeDasharray={circumference + ' ' + circumference}
+          // strokeDasharray needs to be a string formatted with spaces
+          strokeDasharray={`${circumference} ${circumference}`}
           style={{ strokeDashoffset: offset }}
           r={radius}
           cx={size / 2}

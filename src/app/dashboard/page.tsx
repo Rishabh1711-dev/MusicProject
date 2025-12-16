@@ -7,7 +7,7 @@ import { Activity, Clock, Guitar, TrendingUp, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { Course, UserProgress, SkillMetric } from '@/lib/types';
 
-// Utility to find course title from ID (to avoid a new API call)
+// Utility to find course title from ID
 const getCourseTitle = (courses: Course[], id: number) => {
     return courses.find(c => c.id === id)?.title || `Course ID ${id}`;
 };
@@ -17,16 +17,18 @@ async function DashboardContent() {
     const session = await getServerSession();
 
     if (!session) {
+        // This redirect should be handled by middleware/AuthStatus for Client Components
         return <div className="text-center text-neutral-500 py-10">Redirecting to login...</div>;
     }
 
     const [dashboardData, allCourses] = await Promise.all([
         getUserDashboardData(session.user.id),
-        getAllCourses('', 'id') // Fetch all courses to map IDs to titles
+        getAllCourses('', 'id')
     ]);
 
     const { progress, skills } = dashboardData;
-    // Fix: Explicitly type accumulator and current value to avoid 'any' error
+    
+    // Explicit types added for safety
     const totalProgress = progress.reduce((sum: number, p: UserProgress) => sum + p.masteryScore, 0) / (progress.length || 1);
 
     return (
@@ -73,7 +75,6 @@ async function DashboardContent() {
                     {/* Active Courses List */}
                     <div className="space-y-4">
                         <h3 className="text-2xl font-bold text-white mb-4">Active Courses</h3>
-                        {/* Fix: Explicit type for map callback parameter */}
                         {progress.map((p: UserProgress) => (
                             <div key={p.courseId} className="p-4 bg-neutral-900/70 rounded-lg flex justify-between items-center hover:bg-neutral-800 transition duration-200 border border-neutral-800">
                                 <div className="flex flex-col">
@@ -105,7 +106,6 @@ async function DashboardContent() {
                         <p className="text-neutral-400 mb-6">Your current estimated mastery scores based on practice and quiz results.</p>
                         
                         <div className="space-y-4">
-                            {/* Fix: Explicit types for sort and map callback parameters */}
                             {skills.sort((a: SkillMetric, b: SkillMetric) => b.score - a.score).map((skill: SkillMetric) => (
                                 <div key={skill.skill}>
                                     <div className="flex justify-between items-center mb-1">
@@ -161,7 +161,6 @@ const Card = ({ title, icon, value, description }: { title: string, icon: React.
 export default function DashboardPage() {
     return (
         <AuthStatus>
-             {/* Use Suspense for loading states while fetching server data */}
             <Suspense fallback={<DashboardSkeleton />}> 
                 <DashboardContent />
             </Suspense>
@@ -172,8 +171,6 @@ export default function DashboardPage() {
 const DashboardSkeleton = () => (
     <div className="p-4 md:p-8 bg-black/[0.9] min-h-screen animate-pulse">
          <div className="h-10 bg-neutral-800 w-80 rounded mb-10"></div>
-         
-         {/* Stat Cards Skeleton */}
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {[1, 2, 3].map(i => (
                 <div key={i} className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-xl h-28">
@@ -182,43 +179,23 @@ const DashboardSkeleton = () => (
                 </div>
             ))}
          </div>
-
-         {/* Main Content Skeleton */}
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             <div className="lg:col-span-2 space-y-10">
                 <div className="h-8 bg-neutral-800 w-60 rounded mb-6"></div>
-                
-                {/* Progress Card Skeleton */}
                 <div className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-lg h-40">
                     <div className="flex gap-8">
                         <div className="h-28 w-28 rounded-full bg-neutral-800"></div>
                         <div className="flex-1 space-y-3 pt-2">
                             <div className="h-5 bg-neutral-800 w-1/2 rounded"></div>
                             <div className="h-4 bg-neutral-700 w-full rounded"></div>
-                            <div className="h-4 bg-neutral-700 w-3/4 rounded"></div>
                         </div>
                     </div>
                 </div>
-                
-                {/* Active Courses Skeleton */}
-                <div className="space-y-4">
-                    <div className="h-6 bg-neutral-800 w-40 rounded mb-4"></div>
-                    {[1, 2].map(i => (
-                        <div key={i} className="p-4 bg-neutral-900/70 rounded-lg h-16">
-                             <div className="h-4 bg-neutral-800 w-1/3 rounded"></div>
-                        </div>
-                    ))}
-                </div>
             </div>
-
-            {/* Skill Graph Skeleton */}
             <div className="space-y-10">
                  <div className="h-8 bg-neutral-800 w-40 rounded mb-6"></div>
                  <div className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-lg h-72">
                     <div className="h-4 bg-neutral-800 w-full rounded mb-4"></div>
-                    <div className="h-2 bg-neutral-700 w-full rounded mb-4"></div>
-                    <div className="h-4 bg-neutral-800 w-full rounded mb-4"></div>
-                    <div className="h-2 bg-neutral-700 w-full rounded mb-4"></div>
                  </div>
             </div>
          </div>
