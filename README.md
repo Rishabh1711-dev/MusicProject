@@ -12,7 +12,15 @@
 ## ✨ Key Features
 
 This project features a collection of high-performance, visually appealing UI components:
+AI Pathfinder: A personalized curriculum generator that analyzes user playstyles to create custom learning paths.
 
+Interactive Dashboard: A premium student portal featuring practice streak tracking, daily momentum goals, and detailed progress insights.
+
+Elite Course Catalog: Responsive 3D-animated course cards showcasing programs in composition, production, and instruments.
+
+Immersive Visuals: High-performance animations including Spotlight effects, Wavy backgrounds, and Sticky Scroll reveals.
+
+Dynamic Auth Flow: A functional authentication system supporting Google, GitHub, and email-based login.
 * **Hero Section with Spotlight:** A dramatic spotlight effect tracking the mouse position to highlight the main value proposition.
 * **Featured Courses:** A responsive grid displaying course details (Guitar, Piano, Production) with 3D background gradient effects.
 * **Sticky Scroll Reveal:** A "Why Choose Us" section that smoothly reveals content and visuals as the user scrolls.
@@ -65,27 +73,39 @@ Ensure you have **Node.js** (version 18.17.0 or later) installed.
     Navigate to [http://localhost:3000](http://localhost:3000) to view the application.
 
 ## xB8; Project Structure
-
-```bash
-src/
-├── app/
-│   ├── layout.tsx       # Main layout (includes Font & Navbar)
-│   ├── page.tsx         # Landing page composition
-│   └── globals.css      # Global styles & Tailwind directives
-├── components/
-│   ├── ui/              # Reusable UI components (Spotlight, Cards, etc.)
-│   ├── Featured.tsx     # Featured Courses section
-│   ├── HeroSection.tsx  # Landing Hero
-│   ├── Instructors.tsx  # Instructor showcase
-│   ├── Navbar.tsx       # Main Navigation
-│   ├── TestimonialCards.tsx
-│   ├── UpcomingWebinars.tsx
-│   └── WhyChooseUs.tsx
-├── data/
-│   └── music_courses.json # Mock data for courses
-└── lib/
-    └── utils.ts         # cn() utility for class merging
-
+rishabh1711-dev/musicproject/
+├── public/                  # Static assets (SVG icons, etc.)
+├── src/
+│   ├── app/                 # Next.js App Router
+│   │   ├── (main)/pricing/  # Subscription plans page
+│   │   ├── ai-pathfinder/   # AI-driven curriculum generator
+│   │   ├── auth/login/      # User authentication page
+│   │   ├── contact/         # Support and contact form
+│   │   ├── courses/         # Course catalog and details
+│   │   ├── dashboard/       # Personalized student portal
+│   │   ├── globals.css      # Tailwind and global styling
+│   │   ├── layout.tsx       # Root layout with Navbar and Providers
+│   │   ├── page.tsx         # Landing page
+│   │   └── providers.tsx    # Context and State providers
+│   ├── components/          # Reusable UI library
+│   │   ├── client/          # Interactive client-side components
+│   │   ├── courses/         # Course-specific UI (cards, filters)
+│   │   ├── lms/             # Learning management tools (Progress circles)
+│   │   ├── ui/              # Aceternity UI and Framer Motion components
+│   │   ├── Featured.tsx     # Featured programs section
+│   │   ├── HeroSection.tsx  # Dynamic landing hero
+│   │   ├── Instructors.tsx  # Instructor showcase
+│   │   ├── Navbar.tsx       # Main navigation bar
+│   │   └── WhyChooseUs.tsx  # Value proposition section
+│   ├── data/                # Mock JSON data for courses
+│   └── lib/                 # Core logic and utilities
+│       ├── auth.ts          # Custom authentication hooks
+│       ├── data.ts          # Data fetching utilities
+│       ├── types.ts         # TypeScript interfaces
+│       └── utils.ts         # Tailwind merging and helper functions
+├── next.config.ts           # Next.js configuration
+├── package.json             # Dependencies and scripts
+└── tailwind.config.ts       # Design system configuration
 
 
 
