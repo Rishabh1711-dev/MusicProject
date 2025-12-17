@@ -1,34 +1,36 @@
-import Link from 'next/link';
-import { Home, Zap } from 'lucide-react';
+import Link from 'next/link'
+import { Button } from "@/components/ui/button";
+import { Ghost, Home } from 'lucide-react'
 
-// Custom 404 page for a professional look
+// Server Component
 export default function NotFound() {
   return (
-    <div className="min-h-[calc(100vh-8rem)] flex flex-col items-center justify-center text-center p-6 bg-black">
-      <Zap className="h-20 w-20 text-teal-500 mb-4 animate-bounce" />
-      <h1 className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 mb-4">
-        404
-      </h1>
-      <h2 className="text-3xl font-semibold text-white mb-4">
-        Page Not Found: Lost in the Rhythm
-      </h2>
-      <p className="text-lg text-neutral-400 mb-8 max-w-lg">
-        It seems the page you&apos;re looking for has either moved to a new key 
-        signature or was never composed. Don&apos;t worry, the concert hasn&apos;t ended.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Link href="/" passHref>
-          <button className="px-6 py-3 rounded-full bg-teal-600 hover:bg-teal-700 font-bold text-white transition duration-200 flex items-center space-x-2">
-            <Home className="h-5 w-5" />
-            <span>Return to Home</span>
-          </button>
-        </Link>
-        <Link href="/courses" passHref>
-          <button className="px-6 py-3 rounded-full border border-white/20 hover:bg-white/10 text-white font-semibold transition duration-200">
-            Explore Courses
-          </button>
-        </Link>
+    <div className="min-h-screen flex flex-col items-center justify-center text-center p-4">
+      <div className="relative p-10 rounded-2xl bg-card border border-border max-w-xl shadow-2xl">
+        <Ghost className="w-16 h-16 text-primary mx-auto mb-6 animate-bounce-slow" />
+        <h1 className="text-8xl font-extrabold text-foreground bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+            404
+        </h1>
+        <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Page Not Found
+        </h2>
+        <p className="mt-4 text-lg text-muted-foreground">
+            The symphony you were looking for seems to have moved to a different key.
+        </p>
+        <div className="mt-8 flex justify-center space-x-4">
+          <Link href="/">
+            <Button size="lg" className="flex items-center">
+                <Home className="w-5 h-5 mr-2" />
+                Go to Home
+            </Button>
+          </Link>
+          <Link href="/courses">
+            <Button size="lg" variant="outline">
+                Explore Courses
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
-  );
+  )
 }

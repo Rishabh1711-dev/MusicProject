@@ -1,125 +1,159 @@
-import { getCourseBySlug } from "@/lib/data/course-data";
-import { notFound } from "next/navigation";
+import { getCourseBySlug } from "@/lib/data";
+import { ArrowRight, Clock, DollarSign, FileText, LayoutList, CheckCircle, Circle, ArrowDown, ArrowUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import Link from "next/link"; // FIX: Import Link from next/link
-import { CheckCircle, Clock, DollarSign } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 
+interface CourseSlugPageProps {
+  params: {
+    slug: string;
+  };
+}
 
-export default async function CourseDetail({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const { slug } = params;
-  const course = await getCourseBySlug(slug);
+export async function generateMetadata({ params }: CourseSlugPageProps) {
+    const course = await getCourseBySlug(params.slug);
+
+    if (!course) {
+        return {
+            title: "Course Not Found | Axiom Academy",
+        }
+    }
+
+    return {
+        title: `${course.title} | Axiom Academy`,
+        description: course.description,
+        keywords: [...course.tags, course.level, course.instructor, "course", "music"],
+    };
+}
+
+// Server Component
+export default async function CourseSlugPage({ params }: CourseSlugPageProps) {
+  const course = await getCourseBySlug(params.slug);
 
   if (!course) {
     notFound();
   }
 
-  // MOCK LESSONS - for dynamic curriculum visibility
-  const mockLessons = [
-    { id: 1, title: "Module 1: Instrument Setup & Fundamentals", duration: "15 mins", isCompleted: true },
-    { id: 2, title: "Module 2: Basic Chords and Scales", duration: "20 mins", isCompleted: true },
-    { id: 3, title: "Module 3: Rhythm and Timing Mastery", duration: "25 mins", isCompleted: false },
-    { id: 4, title: "Module 4: Introduction to Improvisation", duration: "30 mins", isCompleted: false },
-    { id: 5, title: "Module 5: Performance Techniques", duration: "40 mins", isCompleted: false },
-  ];
-
   return (
-    <div className="min-h-screen bg-black text-white py-12 pt-28">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <div className="min-h-screen py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           
-          {/* Left Column: Image & Details */}
+          {/* Main Content Column */}
           <div className="lg:col-span-2">
-            <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-               <Image 
-                 src={course.image} 
-                 alt={course.title} 
-                 fill 
-                 className="object-cover"
-               />
-               <div className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-end p-6">
-                 <span className="px-3 py-1 bg-teal-600/80 text-white text-sm font-semibold rounded-full backdrop-blur-md">
-                    {course.isFeatured ? 'Featured Course' : 'Available'}
-                 </span>
-               </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-foreground leading-tight">
+              {course.title}
+            </h1>
+            <p className="mt-2 text-xl text-primary font-medium">
+              Taught by: <span className="text-foreground">{course.instructor}</span>
+            </p>
+            
+            <div className="relative mt-6 w-full h-80 rounded-xl overflow-hidden shadow-2xl">
+              <Image
+                src={course.image || '/images/default-course.jpg'}
+                alt={course.title}
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-black/40" />
             </div>
 
-            {/* Course Curriculum/Lessons */}
-            <div className="mt-12">
-                <h2 className="text-3xl font-bold mb-6 border-b border-neutral-800 pb-3">Syllabus ({mockLessons.length} Modules)</h2>
-                <div className="space-y-3">
-                    {mockLessons.map((lesson) => (
-                    <div 
-                        key={lesson.id} 
-                        className={`p-4 rounded-lg flex justify-between items-center transition-all duration-300 ${
-                            lesson.isCompleted 
-                                ? 'bg-neutral-800/50 border-l-4 border-teal-500' 
-                                : 'bg-neutral-900/50 border-l-4 border-neutral-700 hover:bg-neutral-800'
-                        }`}
-                    >
-                        <div className="flex items-center space-x-3">
-                            <span className={`font-semibold ${lesson.isCompleted ? 'text-teal-400' : 'text-neutral-300'}`}>
-                                {lesson.id}. {lesson.title}
-                            </span>
-                        </div>
-                        <div className="flex items-center space-x-4 text-sm">
-                            <span className="text-neutral-500 flex items-center space-x-1">
-                                <Clock className="h-4 w-4" />
-                                <span>{lesson.duration}</span>
-                            </span>
-                            {lesson.isCompleted && <CheckCircle className="h-5 w-5 text-teal-500" />}
-                        </div>
-                    </div>
-                    ))}
-                </div>
-                
-                {/* Simulated Lesson Access Link - protected */}
-                <Link href={`/dashboard`} passHref>
-                    <button className="mt-8 px-6 py-3 rounded-full border border-teal-600 hover:bg-teal-600/20 text-teal-400 font-semibold transition duration-200">
-                        View Your Learning Progress
-                    </button>
-                </Link>
+            {/* Overview */}
+            <section className="mt-10">
+              <h2 className="text-3xl font-bold text-foreground mb-4 border-b border-border pb-2">Course Overview</h2>
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                {course.description}
+              </p>
+              
+              <div className="mt-6 flex flex-wrap gap-4 text-sm font-medium">
+                {course.tags.map(tag => (
+                    <span key={tag} className="px-3 py-1 rounded-full bg-accent/20 text-accent border border-accent/40">
+                        {tag}
+                    </span>
+                ))}
+                <span className="px-3 py-1 rounded-full bg-primary/20 text-primary border border-primary/40">
+                    {course.level}
+                </span>
+              </div>
+            </section>
 
-            </div>
-          </div>
-
-          {/* Right Column: Enrollment Card */}
-          <div className="lg:col-span-1">
-            <div className="p-8 bg-neutral-900 rounded-2xl border border-neutral-800 sticky top-28 shadow-xl">
-                <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 mb-4">
-                    Course Summary
-                </h2>
-
-                <p className="text-neutral-400 text-base mb-6">
-                  {course.description}
-                </p>
-                
-                <div className="space-y-4 mb-8 border-t border-neutral-800 pt-4">
-                    <div className="flex items-center space-x-2 justify-between">
-                        <span className="text-teal-500 font-semibold flex items-center space-x-2">Instructor:</span>
-                        <span className="text-white font-medium">{course.instructor}</span>
-                    </div>
-                    <div className="flex items-center space-x-2 justify-between">
-                        <span className="text-teal-500 font-semibold flex items-center space-x-2">
-                             <DollarSign className="h-5 w-5"/> Price:
+            {/* Course Curriculum */}
+            <section className="mt-12">
+              <h2 className="text-3xl font-bold text-foreground mb-6 border-b border-border pb-2">What You'll Learn ({course.lessons} Lessons)</h2>
+              <div className="space-y-4">
+                {course.path.map((lesson, index) => (
+                  <details key={index} className="rounded-xl border border-border bg-card/70 p-4 group">
+                    <summary className="flex items-center justify-between cursor-pointer list-none">
+                      <div className="flex items-center space-x-3">
+                        {lesson.isCompleted ? (
+                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" aria-label="Completed" />
+                        ) : (
+                            <Circle className="w-5 h-5 text-muted-foreground flex-shrink-0" aria-label="Not Started" />
+                        )}
+                        <span className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                          Lesson {index + 1}: {lesson.title}
                         </span>
-                        <span className="text-3xl font-extrabold text-white">${course.price}</span>
-                    </div>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                    <button className="w-full px-8 py-3 rounded-full bg-teal-600 hover:bg-teal-700 font-bold transition duration-200 shadow-md shadow-teal-500/30">
-                        Enroll Now
-                    </button>
-                    <button className="w-full px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 transition duration-200">
-                        Watch Trailer
-                    </button>
-                </div>
-            </div>
+                      </div>
+                      <span className="text-muted-foreground group-open:hidden"><ArrowDown className="w-4 h-4" /></span>
+                      <span className="text-primary hidden group-open:inline-block"><ArrowUp className="w-4 h-4" /></span>
+                    </summary>
+                    <p className="mt-3 pl-8 text-muted-foreground text-sm border-l border-border ml-2">
+                      {lesson.description}
+                    </p>
+                  </details>
+                ))}
+              </div>
+            </section>
           </div>
+
+          {/* Sidebar (Purchase Card) */}
+          <aside className="lg:col-span-1 sticky top-[100px] h-fit">
+            <div className="p-6 rounded-2xl bg-card border border-primary/30 shadow-2xl shadow-primary/10">
+              <h3 className="text-3xl font-extrabold text-foreground flex items-center">
+                <DollarSign className="w-6 h-6 mr-2 text-primary" />
+                {formatPrice(course.price)}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">One-time payment for lifetime access.</p>
+
+              <div className="mt-6 space-y-3 text-muted-foreground">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-5 h-5 text-primary" />
+                  <span>Duration: <strong className="text-foreground">{course.duration}</strong></span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <LayoutList className="w-5 h-5 text-primary" />
+                  <span>Lessons: <strong className="text-foreground">{course.lessons}</strong></span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <FileText className="w-5 h-5 text-primary" />
+                  <span>Materials: <strong className="text-foreground">HD Video, MIDI, & Projects</strong></span>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <Link href="/dashboard" passHref>
+                    <Button className="w-full h-12 text-lg" variant="default">
+                      Enroll Now <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                </Link>
+                <p className="mt-3 text-xs text-center text-muted-foreground">
+                  30-Day Money-Back Guarantee
+                </p>
+              </div>
+            </div>
+            {/* Ad for Instructor */}
+            <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/30 text-center">
+                <p className="font-semibold text-primary">
+                    Interested in the instructor, {course.instructor}?
+                </p>
+                <Link href="/about" className="text-sm text-primary/80 hover:underline">
+                    View instructor profile & philosophy &rarr;
+                </Link>
+            </div>
+          </aside>
         </div>
       </div>
     </div>

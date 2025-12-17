@@ -1,64 +1,53 @@
 "use client";
-
 import React from "react";
-import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Link from "next/link";
-import Image from "next/image";
-import { Course } from "@/lib/types"; 
+import { Course } from "@/lib/types";
+import { formatPrice } from "@/lib/utils";
+import { Clock, BookOpen, User } from "lucide-react";
 
-interface CourseCardProps {
-    course: Course;
-}
+export function CourseCard({ course }: { course: Course }) {
+  return (
+    <Link 
+      href={`/courses/${course.slug}`} 
+      className="group block h-full p-6 rounded-3xl bg-neutral-900/50 border border-white/5 hover:border-teal-500/50 hover:bg-neutral-900 transition-all duration-300 relative overflow-hidden"
+    >
+      {/* Decorative Gradient Background (No Image) */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+      
+      <div className="flex flex-col h-full space-y-4">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-teal-500 uppercase tracking-widest px-2 py-1 rounded bg-teal-500/10">
+              {course.level}
+            </span>
+            <span className="text-lg font-bold text-white">
+              {formatPrice(course.price)}
+            </span>
+          </div>
+          <h3 className="text-xl font-bold text-white group-hover:text-teal-400 transition-colors line-clamp-2">
+            {course.title}
+          </h3>
+        </div>
 
-/**
- * Client component to render a single course card.
- * This isolates the UI components (like CardItem) and interactive props (like as={Link})
- * within the client environment, resolving the serialization error.
- */
-export default function CourseCard({ course }: CourseCardProps) {
-    return (
-        <CardContainer className="inter-var">
-            <CardBody className="bg-neutral-900 relative group/card dark:hover:shadow-2xl dark:hover:shadow-teal-500/[0.1] dark:bg-black dark:border-white/[0.2] border-neutral-800/50 w-auto h-full rounded-xl p-6 border transition-all duration-300">
-                <CardItem
-                    translateZ="50"
-                    className="text-xl font-bold text-neutral-200 dark:text-white line-clamp-2"
-                >
-                    {course.title}
-                </CardItem>
-                <CardItem
-                    as="p"
-                    translateZ="60"
-                    className="text-neutral-500 text-sm mt-2 line-clamp-3"
-                >
-                    {course.description}
-                </CardItem>
-                <CardItem translateZ="100" className="w-full mt-4">
-                    <Image
-                        src={course.image}
-                        height="1000"
-                        width="1000"
-                        className="h-60 w-full object-cover object-center rounded-xl group-hover/card:shadow-xl transition-shadow duration-500"
-                        alt={course.title}
-                    />
-                </CardItem>
-                <div className="flex justify-between items-center mt-6">
-                    <CardItem
-                        translateZ={20}
-                        as={Link} // This is now safe because CourseCard is a Client Component
-                        href={`/courses/${course.slug}`}
-                        className="px-4 py-2 rounded-xl text-xs font-normal dark:text-teal-400 hover:underline"
-                    >
-                        Details →
-                    </CardItem>
-                    <CardItem
-                        translateZ={20}
-                        as="button"
-                        className="px-4 py-2 rounded-xl bg-teal-600 dark:bg-teal-600 dark:text-white text-white text-xs font-bold hover:bg-teal-700 transition duration-200"
-                    >
-                        Buy ${course.price}
-                    </CardItem>
-                </div>
-            </CardBody>
-        </CardContainer>
-    );
+        <p className="text-sm text-neutral-400 line-clamp-3 flex-grow">
+          {course.description}
+        </p>
+
+        <div className="pt-4 border-t border-white/5 grid grid-cols-2 gap-4">
+          <div className="flex items-center gap-2 text-xs text-neutral-500">
+            <User size={14} className="text-teal-500" />
+            <span className="truncate">{course.instructor}</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-neutral-500">
+            <Clock size={14} className="text-teal-500" />
+            <span>{course.duration}</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-neutral-500">
+            <BookOpen size={14} className="text-teal-500" />
+            <span>{course.lessons} Lessons</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
 }

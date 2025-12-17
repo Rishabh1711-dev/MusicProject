@@ -1,47 +1,42 @@
+import { Music3, Zap, GraduationCap, Users } from 'lucide-react';
+import { WavyBackground } from '@/components/ui/WavyBackground';
 
-"use client";
-import React from "react";
-import {StickyScroll} from "./ui/sticky-scroll-reveal";
+const features = [
+  { icon: Music3, title: 'Industry-Elite Instructors', description: 'Learn directly from Grammy-winning producers and world-touring musicians.' },
+  { icon: Zap, title: 'Highly Interactive Learning', description: 'Hands-on projects, live Q&A sessions, and instant feedback loops for accelerated progress.' },
+  { icon: GraduationCap, title: 'Structured Path to Mastery', description: 'Follow a proven curriculum designed to take you from novice to professional.' },
+  { icon: Users, title: 'Global Creative Community', description: 'Connect, collaborate, and grow with thousands of aspiring and established artists worldwide.' },
+];
 
-const musicSchoolContent = [
-    {
-      title: 'Discover Your Sound with Us: A Personal Journey in Music Mastery',
-      description:
-        'Embark on a musical journey that’s uniquely yours. Our personalized instruction adapts to your individual needs, setting the stage for unparalleled growth and creativity. At our music school, your aspirations meet our dedicated support, creating a harmonious path to mastery.',
-    },
-    {
-      title: 'Discover Your Sound with Us: A Personal Journey in Music Mastery',
-      description:
-        'Embark on a musical journey that’s uniquely yours. Our personalized instruction adapts to your individual needs, setting the stage for unparalleled growth and creativity. At our music school, your aspirations meet our dedicated support, creating a harmonious path to mastery.',
-    },
-    {
-      title: 'Discover Your Sound with Us: A Personal Journey in Music Mastery',
-      description:
-        'Embark on a musical journey that’s uniquely yours. Our personalized instruction adapts to your individual needs, setting the stage for unparalleled growth and creativity. At our music school, your aspirations meet our dedicated support, creating a harmonious path to mastery.',
-    },
-    {
-      title: 'Live Feedback & Engagement',
-      description:
-        'Immerse yourself in an interactive learning experience where feedback is immediate, just like real-time changes in a collaborative project. This approach enhances your understanding and mastery of music concepts and performance techniques.',
-    },
-    {
-      title: 'Cutting-Edge Curriculum',
-      description:
-        'Our curriculum is continuously updated to include the latest music education trends and technologies, ensuring you’re always learning with the most current and effective methods. Say goodbye to outdated materials and welcome an education that evolves with the industry.',
-    },
-    {
-      title: 'Limitless Learning Opportunities',
-      description:
-        'With our expansive resource library and dynamic course offerings, you’ll never find yourself without something new to explore. Our platform provides continuous opportunities for growth, ensuring your musical skills are always advancing.',
-    },
-  ];
-
-function WhyChooseUs() {
+// Server Component
+export default function WhyChooseUs() {
   return (
-    <div>
-        <StickyScroll content={musicSchoolContent} />
-    </div>
-  )
-}
+    <div className="relative py-24 overflow-hidden">
+      {/* WavyBackground is a Client Component but is safe to use here as a visual wrapper */}
+      <WavyBackground className="max-w-7xl mx-auto py-20">
+        <div className="text-center relative z-10">
+          <h2 className="text-primary font-semibold tracking-wider uppercase">Why Axiom?</h2>
+          <p className="mt-2 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white">
+            Beyond Traditional Education
+          </p>
+          <p className="mt-4 text-xl text-neutral-300 max-w-3xl mx-auto">
+            We merge cutting-edge technology with unparalleled human expertise.
+          </p>
+        </div>
 
-export default WhyChooseUs
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="p-6 rounded-2xl bg-card/70 backdrop-blur-sm border border-primary/20 shadow-2xl hover:border-primary transition-all duration-500 transform hover:scale-[1.02]"
+            >
+              <feature.icon className="w-10 h-10 text-primary mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
+              <p className="text-sm text-muted-foreground">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </WavyBackground>
+    </div>
+  );
+}

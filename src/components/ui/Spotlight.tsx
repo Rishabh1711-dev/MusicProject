@@ -1,40 +1,40 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+// This version is a static visual element, safe to be a Server Component
+import { cn } from '@/lib/utils';
+import React from 'react';
 
-type SpotlightProps = {
+interface SpotlightProps {
   className?: string;
   fill?: string;
-};
+}
 
-export const Spotlight = ({ className, fill }: SpotlightProps) => {
+export const Spotlight = ({ className, fill = 'white' }: SpotlightProps) => {
   return (
     <svg
       className={cn(
-        "animate-spotlight pointer-events-none absolute z-[1]  h-[169%] w-[138%] lg:w-[84%] opacity-0",
+        'animate-spotlight pointer-events-none absolute z-[1] h-[169%] w-[138%] opacity-0',
         className
       )}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 3787 2842"
+      viewBox="0 0 3787 3787"
       fill="none"
     >
       <g filter="url(#filter)">
         <ellipse
           cx="1924.71"
-          cy="273.501"
+          cy="1924.71"
           rx="1924.71"
-          ry="273.501"
-          transform="matrix(-0.822377 -0.568943 -0.568943 0.822377 3631.88 2291.09)"
-          fill={fill || "white"}
-          fillOpacity="0.21"
+          ry="1924.71"
+          fill={fill}
+          fillOpacity="0.4"
         ></ellipse>
       </g>
       <defs>
         <filter
           id="filter"
-          x="0.860352"
-          y="0.838989"
-          width="3785.16"
-          height="2840.26"
+          x="0"
+          y="0"
+          width="3787"
+          height="3787"
           filterUnits="userSpaceOnUse"
           colorInterpolationFilters="sRGB"
         >
@@ -46,8 +46,8 @@ export const Spotlight = ({ className, fill }: SpotlightProps) => {
             result="shape"
           ></feBlend>
           <feGaussianBlur
-            stdDeviation="151"
-            result="effect1_foregroundBlur_1065_8"
+            stdDeviation="150"
+            result="effect1_foregroundBlur_3593_74136"
           ></feGaussianBlur>
         </filter>
       </defs>

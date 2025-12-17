@@ -1,55 +1,46 @@
-'use client'
-import Link from "next/link"
-import courseData from "@/data/music_courses.json";
-import { BackgroundGradient } from "./ui/background-gradient"
-interface Course{
-    id: number,
-    title: string,
-    slug: string,
-    description: string,
-    price: number,
-    instructor: string,
-    isFeatured: boolean,
-}
+import React from "react";
+import Link from "next/link";
+import { getAllCourses } from "@/lib/data/course-data";
+import { CourseCard } from "@/components/courses/CourseCard";
+import { Button } from "./ui/button";
+import { ArrowRight, Sparkles } from "lucide-react";
 
-function FeaturedCourses() {
-    const featuredCourses = courseData.courses.filter((course:Course) => course.isFeatured)
-
+export default async function Featured() {
+  const allCourses = await getAllCourses();
+  const featuredCourses = allCourses.filter(course => course.isFeatured).slice(0, 3);
 
   return (
-    <div className="py-12 bg-neutral-950">
-        <div>
-            <div className="text-center">
-                <h2 className="text-base text-teal-600 font-semibold tracking-wide uppercase">FEATURED COURSES</h2>
-                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">Learn With the Best</p>
+    <section className="py-24 bg-neutral-950 border-y border-white/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-500 text-xs font-bold tracking-widest uppercase">
+              <Sparkles size={14} /> Elite Selection
             </div>
+            <h3 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+              Featured Programs
+            </h3>
+          </div>
+          <Link href="/courses" className="mt-8 md:mt-0">
+            <Button variant="outline" className="group border-neutral-800 hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300">
+              View full catalog <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
         </div>
-        <div className="mt-10 mx-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-                {featuredCourses.map((course:Course)=> (
-                    <div key={course.id} className="flex justify-center">
-                        <BackgroundGradient
-                        className="flex flex-col rounded-[22px] bg-white dark:bg-zinc-900 overflow-hidden h-full max-w-sm">
-                            <div className="p-4 sm:p-6 flex flex-col items-center text-center flex-grow">
-                                <p className="text-lg sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200">{course.title}</p>
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400 flex-grow">{course.description}</p>
-                                <Link href={`/courses/${course.slug}`}>
-                                Learn More
-                                </Link>
-                            </div>
-                        </BackgroundGradient>
-                    </div>
-                ))}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {featuredCourses.map((course) => (
+            <div key={course.id} className="relative">
+              <CourseCard course={course} />
+              <div className="absolute top-4 right-4 z-20">
+                <div className="bg-teal-600 text-white text-[10px] font-black px-3 py-1.5 rounded-lg shadow-2xl flex items-center gap-1 uppercase tracking-tighter ring-1 ring-white/20">
+                  Must Learn
+                </div>
+              </div>
             </div>
+          ))}
         </div>
-        <div className="mt-20 text-center">
-            <Link href={"/courses"}
-            className="px-4 py-2 rounded border bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
-            >
-            View All courses
-            </Link>
-        </div>
-    </div>
-  )
+      </div>
+    </section>
+  );
 }
-export default FeaturedCourses

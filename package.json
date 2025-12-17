@@ -1,12 +1,12 @@
 {
-  "name": "nextjs",
+  "name": "melody-mind-pro",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

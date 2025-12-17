@@ -1,203 +1,126 @@
-import { Suspense } from 'react';
-import { getServerSession } from '@/lib/auth';
-import { getUserDashboardData, getAllCourses } from '@/lib/data/course-data';
-import { AuthStatus } from '@/components/lms/AuthStatus';
-import { ProgressCircle } from '@/components/lms/ProgressCircle';
-import { Activity, Clock, Guitar, TrendingUp, Zap } from 'lucide-react';
-import Link from 'next/link';
-import { Course, UserProgress, SkillMetric } from '@/lib/types';
-
-// Utility to find course title from ID
-const getCourseTitle = (courses: Course[], id: number) => {
-    return courses.find(c => c.id === id)?.title || `Course ID ${id}`;
-};
-
-// Main Server Component for the Dashboard
-async function DashboardContent() {
-    const session = await getServerSession();
-
-    if (!session) {
-        // This redirect should be handled by middleware/AuthStatus for Client Components
-        return <div className="text-center text-neutral-500 py-10">Redirecting to login...</div>;
-    }
-
-    const [dashboardData, allCourses] = await Promise.all([
-        getUserDashboardData(session.user.id),
-        getAllCourses('', 'id')
-    ]);
-
-    const { progress, skills } = dashboardData;
-    
-    // Explicit types added for safety
-    const totalProgress = progress.reduce((sum: number, p: UserProgress) => sum + p.masteryScore, 0) / (progress.length || 1);
-
-    return (
-        <div className="p-4 md:p-8 bg-black/[0.9] min-h-screen">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 mb-2">
-                Welcome back, {session.user.name.split(' ')[0]}
-            </h1>
-            <p className="text-neutral-400 text-lg mb-10">
-                Your personalized learning journey is waiting.
-            </p>
-
-            {/* Top Stat Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <Card title="Total Mastery" icon={<TrendingUp className="h-6 w-6 text-teal-400" />} value={`${totalProgress.toFixed(0)}%`} description="Average mastery across active courses." />
-                <Card title="Skill Level" icon={<Zap className="h-6 w-6 text-blue-400" />} value={session.user.skillLevel} description="Current assessed skill category." />
-                <Card title="Active Courses" icon={<Guitar className="h-6 w-6 text-yellow-400" />} value={progress.length.toString()} description="Courses currently in progress." />
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                {/* Left Column: Progress & Next Step */}
-                <div className="lg:col-span-2 space-y-10">
-                    <h2 className="text-3xl font-bold text-white mb-4 border-b border-neutral-800 pb-2">My Learning Path</h2>
-
-                    {/* Progress Overview */}
-                    <div className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-lg">
-                        <div className="flex flex-wrap gap-8 justify-around items-center">
-                            <ProgressCircle progress={totalProgress} label="Overall Progress" size={140} strokeWidth={10} />
-                            
-                            <div className="flex-1 min-w-[200px]">
-                                <h3 className="text-xl font-semibold text-white mb-3">Your Next Step</h3>
-                                <p className="text-neutral-400 mb-4">
-                                    Continue your journey to **Advanced Vocal Techniques**.
-                                </p>
-                                <Link href={`/learn/3/4`} passHref>
-                                    <button className="px-6 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition duration-200 flex items-center space-x-2">
-                                        <Activity className="h-5 w-5" />
-                                        <span>Start Next Lesson</span>
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Active Courses List */}
-                    <div className="space-y-4">
-                        <h3 className="text-2xl font-bold text-white mb-4">Active Courses</h3>
-                        {progress.map((p: UserProgress) => (
-                            <div key={p.courseId} className="p-4 bg-neutral-900/70 rounded-lg flex justify-between items-center hover:bg-neutral-800 transition duration-200 border border-neutral-800">
-                                <div className="flex flex-col">
-                                    <span className="text-lg font-medium text-white">{getCourseTitle(allCourses, p.courseId)}</span>
-                                    <div className="flex items-center space-x-2 text-sm text-neutral-400 mt-1">
-                                        <Clock className="h-4 w-4" />
-                                        <span>Last Active: {p.lastActive}</span>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <span className="text-teal-400 font-bold">{p.lessonsCompleted}/{p.totalLessons} Lessons</span>
-                                    <div className="h-1.5 w-24 bg-neutral-700 rounded-full mt-1">
-                                        <div 
-                                            className="h-full bg-teal-500 rounded-full transition-all duration-500" 
-                                            style={{ width: `${(p.lessonsCompleted / p.totalLessons) * 100}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Right Column: Skill Graph */}
-                <div className="space-y-10">
-                    <h2 className="text-3xl font-bold text-white mb-4 border-b border-neutral-800 pb-2">Skill Breakdown</h2>
-
-                    <div className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-lg">
-                        <p className="text-neutral-400 mb-6">Your current estimated mastery scores based on practice and quiz results.</p>
-                        
-                        <div className="space-y-4">
-                            {skills.sort((a: SkillMetric, b: SkillMetric) => b.score - a.score).map((skill: SkillMetric) => (
-                                <div key={skill.skill}>
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm text-white font-medium">{skill.skill}</span>
-                                        <span className="text-sm font-bold text-teal-400">{skill.score}%</span>
-                                    </div>
-                                    <div className="h-2 bg-neutral-700 rounded-full">
-                                        <div 
-                                            className="h-full rounded-full transition-all duration-700"
-                                            style={{ 
-                                                width: `${skill.score}%`,
-                                                backgroundColor: skill.score > 75 ? 'var(--primary)' : skill.score > 50 ? 'rgb(250 204 21)' : 'rgb(59 130 246)'
-                                            }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    
-                    {/* CTA to AI Pathfinder */}
-                    <div className="p-6 bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-xl border border-teal-500/30">
-                         <h3 className="text-xl font-semibold text-white mb-3">Optimize Your Path</h3>
-                         <p className="text-neutral-400 mb-4 text-sm">Use our AI Pathfinder to generate a custom curriculum based on your weakest skills.</p>
-                         <Link href="/ai-pathfinder" passHref>
-                            <button className="w-full px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 font-bold transition duration-200">
-                                Launch AI Pathfinder
-                            </button>
-                         </Link>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// Simple card component for dashboard stats
-const Card = ({ title, icon, value, description }: { title: string, icon: React.ReactNode, value: string, description: string }) => (
-    <div className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-xl flex items-start space-x-4">
-        <div className="p-3 rounded-full bg-neutral-800/50">
-            {icon}
-        </div>
-        <div>
-            <p className="text-sm font-medium text-neutral-400">{title}</p>
-            <h3 className="text-3xl font-extrabold text-white mt-1">{value}</h3>
-            <p className="text-xs text-neutral-500 mt-1">{description}</p>
-        </div>
-    </div>
-);
-
+"use client";
+import React, { useState } from "react";
+import ProgressCircle from "@/components/lms/ProgressCircle";
+import { useClientSession } from "@/lib/auth";
+import { Music, Play, BookOpen, Settings, LayoutDashboard, TrendingUp, Award } from "lucide-react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
-    return (
-        <AuthStatus>
-            <Suspense fallback={<DashboardSkeleton />}> 
-                <DashboardContent />
-            </Suspense>
-        </AuthStatus>
-    );
-}
+  const { session, status } = useClientSession();
+  const [activeTab, setActiveTab] = useState("my-courses");
 
-const DashboardSkeleton = () => (
-    <div className="p-4 md:p-8 bg-black/[0.9] min-h-screen animate-pulse">
-         <div className="h-10 bg-neutral-800 w-80 rounded mb-10"></div>
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {[1, 2, 3].map(i => (
-                <div key={i} className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-xl h-28">
-                    <div className="h-4 bg-neutral-800 w-1/3 mb-4 rounded"></div>
-                    <div className="h-6 bg-neutral-700 w-2/3 rounded"></div>
+  if (status === "loading") {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-black text-white space-y-4">
+        <div className="h-12 w-12 rounded-full border-4 border-teal-500 border-t-transparent animate-spin"></div>
+        <p className="text-sm font-medium animate-pulse">Initializing AI Pathfinder...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-black pt-24 px-4 md:px-8 pb-12">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
+        <aside className="w-full lg:w-64 space-y-2">
+          <div className="px-4 py-6 mb-4 glass-container">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-teal-600 flex items-center justify-center font-bold">
+                {session?.user?.name?.[0] || "M"}
+              </div>
+              <div>
+                <p className="text-sm font-bold truncate">{session?.user?.name || "Maestro"}</p>
+                <p className="text-[10px] text-teal-500 uppercase font-bold tracking-widest">Premium Member</p>
+              </div>
+            </div>
+          </div>
+          
+          {[
+            { id: "my-courses", label: "My Learning", icon: LayoutDashboard },
+            { id: "active", label: "Current Session", icon: Play },
+            { id: "theory", label: "Music Theory", icon: BookOpen },
+            { id: "stats", label: "Insights", icon: TrendingUp },
+            { id: "settings", label: "Settings", icon: Settings },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+                activeTab === tab.id ? "bg-teal-600 text-white shadow-lg shadow-teal-600/20" : "text-neutral-500 hover:bg-white/5 hover:text-neutral-300"
+              )}
+            >
+              <tab.icon className="w-5 h-5" />
+              <span className="font-medium">{tab.label}</span>
+            </button>
+          ))}
+        </aside>
+
+        <main className="flex-grow space-y-8">
+          <div className="glass-container p-8 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
+              <Award size={120} />
+            </div>
+            <h1 className="text-3xl font-bold relative z-10">Welcome back, {session?.user?.name?.split(' ')[0] || "Creator"}</h1>
+            <p className="text-neutral-400 mt-2 relative z-10">AI Insight: You're in the top 5% of learners this week. Keep up the rhythm!</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="glass-container p-6 bg-gradient-to-br from-teal-900/20 to-black border-teal-500/20">
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <Music className="text-teal-500" /> Resume Learning
+              </h2>
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-bold text-lg">Advanced Composition</h3>
+                  <p className="text-sm text-neutral-400">Next: Modulation & Chord Substitutions</p>
+                  <div className="mt-4 flex items-center gap-2 text-xs text-teal-500 font-bold">
+                    <TrendingUp size={14} />
+                    <span>+12% progress today</span>
+                  </div>
                 </div>
-            ))}
-         </div>
-         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            <div className="lg:col-span-2 space-y-10">
-                <div className="h-8 bg-neutral-800 w-60 rounded mb-6"></div>
-                <div className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-lg h-40">
-                    <div className="flex gap-8">
-                        <div className="h-28 w-28 rounded-full bg-neutral-800"></div>
-                        <div className="flex-1 space-y-3 pt-2">
-                            <div className="h-5 bg-neutral-800 w-1/2 rounded"></div>
-                            <div className="h-4 bg-neutral-700 w-full rounded"></div>
-                        </div>
+                <ProgressCircle progress={84} size={90} />
+              </div>
+              <Link href="/courses/composition">
+                <button className="w-full mt-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-neutral-200 transition-all active:scale-[0.98]">
+                  Start Session
+                </button>
+              </Link>
+            </div>
+
+            <div className="glass-container p-6 flex flex-col justify-between">
+              <div>
+                <h2 className="text-xl font-bold mb-4">Daily Momentum</h2>
+                <div className="space-y-6">
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-neutral-400">Practice Goal</span>
+                      <span className="text-teal-500 font-bold">52 / 60 min</span>
                     </div>
+                    <div className="w-full bg-white/10 h-2.5 rounded-full overflow-hidden">
+                      <div className="bg-teal-500 h-full w-[86%] rounded-full shadow-[0_0_10px_rgba(20,184,166,0.5)]"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 bg-white/5 p-4 rounded-xl">
+                    <div className="h-10 w-10 rounded-lg bg-yellow-500/20 flex items-center justify-center text-yellow-500">
+                      <TrendingUp size={20} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold">7 Day Streak!</p>
+                      <p className="text-xs text-neutral-500">You're on fire. Don't stop now.</p>
+                    </div>
+                  </div>
                 </div>
+              </div>
+              
+              <button className="w-full py-3 bg-zinc-900 border border-white/10 rounded-xl text-sm font-bold hover:bg-zinc-800 transition-all mt-6">
+                View Detailed Stats
+              </button>
             </div>
-            <div className="space-y-10">
-                 <div className="h-8 bg-neutral-800 w-40 rounded mb-6"></div>
-                 <div className="p-6 bg-neutral-900 rounded-xl border border-neutral-800 shadow-lg h-72">
-                    <div className="h-4 bg-neutral-800 w-full rounded mb-4"></div>
-                 </div>
-            </div>
-         </div>
+          </div>
+        </main>
+      </div>
     </div>
-);
+  );
+}

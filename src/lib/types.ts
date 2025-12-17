@@ -1,4 +1,7 @@
-// Defines core interfaces for type safety across the application
+/**
+ * Unified type definitions for MelodyMind
+ */
+export type CourseLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
 export interface Course {
   id: number;
@@ -9,6 +12,17 @@ export interface Course {
   instructor: string;
   isFeatured: boolean;
   image: string;
+  level: CourseLevel;
+  tags: string[];
+  duration: string;
+  lessons: number;
+}
+
+export interface CourseFilter {
+  query?: string;
+  level?: CourseLevel;
+  tag?: string;
+  sort?: 'title-asc' | 'price-asc' | 'price-desc';
 }
 
 export interface UserSession {
@@ -17,17 +31,9 @@ export interface UserSession {
     name: string;
     email: string;
     image?: string;
-    skillLevel: 'Beginner' | 'Intermediate' | 'Advanced';
+    skillLevel: CourseLevel;
   };
-  expires: string;
-}
-
-export interface Lesson {
-  id: number;
-  title: string;
-  duration: string; // e.g., "15 mins"
-  videoUrl: string;
-  isCompleted: boolean;
+  status: 'authenticated' | 'unauthenticated' | 'loading';
 }
 
 export interface UserProgress {
@@ -39,6 +45,6 @@ export interface UserProgress {
 }
 
 export interface SkillMetric {
-    skill: string; // e.g., 'Rhythm', 'Harmony', 'Improvisation'
-    score: number; // 0-100
+    skill: string; 
+    score: number; 
 }

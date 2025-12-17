@@ -1,0 +1,135 @@
+[
+  {
+    "id": 1,
+    "title": "Mastering Modern Guitar Techniques",
+    "slug": "mastering-modern-guitar",
+    "description": "A comprehensive course on advanced techniques for contemporary guitar playing, from shredding to modern jazz.",
+    "price": 249,
+    "instructor": "Alex Turner",
+    "isFeatured": true,
+    "image": "/images/course-guitar.jpg",
+    "level": "Advanced",
+    "tags": ["Guitar", "Theory"],
+    "duration": "10 weeks",
+    "lessons": 45,
+    "path": [
+      {"title": "The Art of Sweep Picking", "description": "Technique and application of sweep picking.", "isCompleted": true},
+      {"title": "Advanced Modal Harmony", "description": "Applying modes in modern compositions.", "isCompleted": false},
+      {"title": "Rhythm Guitar Grooves", "description": "Developing complex rhythmic structures.", "isCompleted": false}
+    ]
+  },
+  {
+    "id": 2,
+    "title": "The Complete Piano Beginner",
+    "slug": "complete-piano-beginner",
+    "description": "Start your journey with the piano. Learn notes, chords, and simple melodies in this accessible beginner course.",
+    "price": 99,
+    "instructor": "Emily Hayes",
+    "isFeatured": true,
+    "image": "/images/course-piano.jpg",
+    "level": "beginner",
+    "tags": ["Piano", "Theory"],
+    "duration": "6 weeks",
+    "lessons": 30,
+    "path": [
+      {"title": "Finding Middle C", "description": "Introduction to the keyboard.", "isCompleted": true},
+      {"title": "Basic Chords: C, G, Am, F", "description": "The four fundamental chords.", "isCompleted": true},
+      {"title": "Playing Your First Song", "description": "Melody and accompaniment.", "isCompleted": true}
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Electronic Music Production 101",
+    "slug": "electronic-music-production-101",
+    "description": "An introduction to sound design, mixing, and mastering using industry-standard software.",
+    "price": 199,
+    "instructor": "Max Vibe",
+    "isFeatured": false,
+    "image": "/images/course-production.jpg",
+    "level": "Intermediate",
+    "tags": ["Production"],
+    "duration": "8 weeks",
+    "lessons": 40,
+    "path": [
+      {"title": "Introduction to Ableton Live", "description": "Interface and workflow.", "isCompleted": false},
+      {"title": "Synthesizer Basics", "description": "ADSR and basic wave types.", "isCompleted": false},
+      {"title": "Your First Beat", "description": "Programming drums and basslines.", "isCompleted": false}
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Vocal Training for Pop Singers",
+    "slug": "vocal-training-pop-singers",
+    "description": "Improve your range, tone, and stage presence with specialized exercises for contemporary pop music.",
+    "price": 149,
+    "instructor": "Sarah Chen",
+    "isFeatured": true,
+    "image": "/images/course-vocals.jpg",
+    "level": "beginner",
+    "tags": ["Vocals"],
+    "duration": "5 weeks",
+    "lessons": 25,
+    "path": [
+      {"title": "Breathing Techniques", "description": "Support and control.", "isCompleted": true},
+      {"title": "Warming Up the Voice", "description": "Daily exercises.", "isCompleted": true},
+      {"title": "Vocal Runs and Riffs", "description": "Adding flair to your singing.", "isCompleted": false}
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Advanced Jazz Harmony and Improvisation",
+    "slug": "advanced-jazz-harmony",
+    "description": "Dive deep into complex chord substitutions, reharmonization, and advanced improvisation concepts.",
+    "price": 299,
+    "instructor": "Alex Turner",
+    "isFeatured": false,
+    "image": "/images/course-jazz.jpg",
+    "level": "Advanced",
+    "tags": ["Piano", "Theory"],
+    "duration": "12 weeks",
+    "lessons": 50,
+    "path": [
+      {"title": "Tritone Substitution", "description": "The foundation of modern jazz harmony.", "isCompleted": false},
+      {"title": "Coltrane Changes", "description": "Analyzing Giant Steps.", "isCompleted": false},
+      {"title": "Polyrhythms in Jazz", "description": "Creating rhythmic tension.", "isCompleted": false}
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Foundational Drumming Grooves",
+    "slug": "foundational-drumming-grooves",
+    "description": "Learn the essential beats for rock, pop, funk, and jazz. Build speed and precision.",
+    "price": 129,
+    "instructor": "Marcus 'The Beat' Jones",
+    "isFeatured": false,
+    "image": "/images/course-drums.jpg",
+    "level": "Intermediate",
+    "tags": ["Drums"],
+    "duration": "7 weeks",
+    "lessons": 35,
+    "path": [
+      {"title": "The Basic Rock Beat", "description": "Hands and feet coordination.", "isCompleted": false},
+      {"title": "Shuffle and Funk Rhythms", "description": "Developing a solid pocket.", "isCompleted": false},
+      {"title": "Rudiments for Speed", "description": "Mastering paradiddles and flams.", "isCompleted": false}
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Writing Music for Film and TV",
+    "slug": "music-for-film-and-tv",
+    "description": "Learn the craft of composing music that enhances storytelling and emotion on screen.",
+    "price": 349,
+    "instructor": "Emily Hayes",
+    "isFeatured": true,
+    "image": "/images/course-film.jpg",
+    "level": "Advanced",
+    "tags": ["Production", "Theory"],
+    "duration": "15 weeks",
+    "lessons": 60,
+    "path": [
+      {"title": "Spotting and Cue Sheets", "description": "Analyzing scenes for music placement.", "isCompleted": false},
+      {"title": "Orchestration Techniques", "description": "Writing for strings and brass.", "isCompleted": false},
+      {"title": "The Business of Scoring", "description": "Contracts and negotiation.", "isCompleted": false}
+    ]
+  }
+]

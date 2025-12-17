@@ -1,69 +1,58 @@
-// src/components/lms/ProgressCircle.tsx
-'use client';
+"use client";
 
-import React from 'react';
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface ProgressCircleProps {
   progress: number; // 0 to 100
   size?: number;
-  strokeWidth?: number;
-  label: string;
 }
 
-// A reusable, animated progress circle for the dashboard
-export const ProgressCircle: React.FC<ProgressCircleProps> = ({
-  progress,
-  size = 120,
-  strokeWidth = 8,
-  label,
-}) => {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  // Calculate the offset for the arc based on the progress percentage
-  const offset = circumference - (progress / 100) * circumference;
-
-  const color = progress >= 75 ? 'text-teal-400' : progress >= 50 ? 'text-yellow-400' : 'text-blue-400';
+export default function ProgressCircle({ progress, size = 120 }: ProgressCircleProps) {
+  const radius = size / 2 - 5; // Reduced radius for thinner stroke
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-2">
+    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <svg
-        height={size}
+        className="transform -rotate-90"
         width={size}
+        height={size}
         viewBox={`0 0 ${size} ${size}`}
-        className={`transform -rotate-90 transition-all duration-1000 ease-out`}
       >
         {/* Background Circle */}
         <circle
-          stroke="#333333"
+          stroke="hsl(var(--primary) / 0.15)"
           fill="transparent"
-          strokeWidth={strokeWidth}
+          strokeWidth="6"
           r={radius}
           cx={size / 2}
           cy={size / 2}
-          className="opacity-20"
         />
-
-        {/* Foreground Arc */}
-        <circle
-          stroke="currentColor"
+        {/* Progress Arc */}
+        <motion.circle
+          stroke="hsl(var(--primary))"
           fill="transparent"
-          strokeWidth={strokeWidth}
-          // strokeDasharray needs to be a string formatted with spaces
-          strokeDasharray={`${circumference} ${circumference}`}
-          style={{ strokeDashoffset: offset }}
+          strokeWidth="6"
+          strokeLinecap="round"
           r={radius}
           cx={size / 2}
           cy={size / 2}
-          className={`transition-all duration-1000 ease-out ${color}`}
+          style={{
+            strokeDasharray: circumference,
+          }}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: strokeDashoffset }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
         />
       </svg>
-      
-      {/* Percentage Text */}
-      <div className="absolute flex flex-col items-center justify-center">
-        <span className={`text-3xl font-bold ${color}`}>{Math.round(progress)}%</span>
+      <div className={cn(
+        "absolute text-xl font-bold",
+        progress === 100 ? "text-green-400" : "text-foreground"
+      )}>
+        {progress}%
       </div>
-      
-      <p className="text-sm text-neutral-400 mt-2">{label}</p>
     </div>
   );
-};
+}

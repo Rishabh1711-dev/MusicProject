@@ -2,44 +2,63 @@
 
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
-import { motion } from "motion/react";
 
-export const InfiniteMovingCards = ({
-  items,
-  direction = "left",
-  speed = "fast",
-  pauseOnHover = true,
-  className,
-}: {
-  items: {
-    quote: string;
-    name: string;
-    title: string;
-  }[];
+interface TestimonialItem {
+  quote: string;
+  name: string;
+  title: string;
+}
+
+interface InfiniteMovingCardsProps {
+  items: TestimonialItem[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
   pauseOnHover?: boolean;
   className?: string;
-}) => {
+}
+
+export const InfiniteMovingCards = ({
+  items,
+  direction = "left",
+  speed = "normal",
+  pauseOnHover = true,
+  className,
+}: InfiniteMovingCardsProps) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const scrollerRef = React.useRef<HTMLUListElement>(null);
   const [start, setStart] = useState(false);
 
   useEffect(() => {
+    addAnimation();
+  }, []);
+
+  function addAnimation() {
     if (containerRef.current && scrollerRef.current) {
       const scrollerContent = Array.from(scrollerRef.current.children);
+
       scrollerContent.forEach((item) => {
         const duplicatedItem = item.cloneNode(true);
         scrollerRef.current?.appendChild(duplicatedItem);
       });
+
       setStart(true);
     }
-  }, []);
+  }
+
+  const getDirection = () => {
+    if (containerRef.current) {
+      return direction === "left" ? "reverse" : "normal";
+    }
+    return "normal";
+  };
 
   const getSpeed = () => {
-    if (speed === "fast") return "20s";
-    if (speed === "normal") return "40s";
-    return "80s";
+    if (containerRef.current) {
+      if (speed === "fast") return "0.2s";
+      if (speed === "normal") return "0.4s";
+      if (speed === "slow") return "1s";
+    }
+    return "0.4s";
   };
 
   return (
@@ -53,33 +72,37 @@ export const InfiniteMovingCards = ({
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex min-w-full shrink-0 gap-4 py-4 w-max flex-nowrap",
+          "flex min-w-full shrink-0 gap-8 py-4 w-max flex-nowrap",
           start && "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
         style={{
-          "--animation-duration": getSpeed(),
-          "--animation-direction": direction === "left" ? "forwards" : "reverse",
+          '--animation-direction': getDirection(),
+          '--animation-duration': getSpeed(),
         } as React.CSSProperties}
       >
         {items.map((item, idx) => (
           <li
-            className="w-[350px] max-w-full relative rounded-2xl border border-b-0 flex-shrink-0 border-slate-700 px-8 py-6 md:w-[450px]"
+            className="w-[350px] max-w-full relative rounded-2xl border border-border flex-shrink-0 p-8 md:p-10"
             style={{
-              background: "linear-gradient(180deg, var(--slate-800), var(--slate-900))",
+              background: 'linear-gradient(180deg, var(--card) 0%, rgba(20, 20, 30, 0.7) 100%)',
             }}
             key={idx}
           >
             <blockquote>
-              <span className="relative z-20 text-sm leading-[1.6] text-gray-100 font-normal">
-                {item.quote}
+              <div
+                aria-hidden="true"
+                className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%+4px)] w-[calc(100%+4px)]"
+              ></div>
+              <span className="relative z-20 text-sm leading-[1.6] text-muted-foreground font-normal italic">
+                &quot;{item.quote}&quot;
               </span>
               <div className="relative z-20 mt-6 flex flex-row items-center">
                 <span className="flex flex-col gap-1">
-                  <span className="text-sm leading-[1.6] text-gray-400 font-normal">
+                  <span className="text-sm leading-[1.6] text-foreground font-bold">
                     {item.name}
                   </span>
-                  <span className="text-sm leading-[1.6] text-gray-400 font-normal">
+                  <span className="text-sm leading-[1.6] text-primary">
                     {item.title}
                   </span>
                 </span>

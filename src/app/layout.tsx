@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MelodyMind - AI Adaptive Music Learning", // Updated title
-  description: "The AI-Powered Personalized Music Learning Platform.", // Updated description
+  title: "MelodyMind - AI Adaptive Music Learning",
+  description: "The AI-Powered Personalized Music Learning Platform.",
 };
 
 export default function RootLayout({
@@ -25,15 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white dark`} // Force dark mode via 'dark' class
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
       >
-        <Providers> {/* Wrap the whole app in the context provider */}
-          {/* Navbar */}
+        <Providers>
           <Navbar />
-
-          {/* Page Content: Increased padding-top for fixed navbar and better visual space */}
           <main className="pt-28 min-h-screen w-full"> 
             {children}
           </main>
